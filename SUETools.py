@@ -1,7 +1,7 @@
 import subprocess
 import time
 
-numero_usb = 0
+numero_midias = 0
 opcao = ""
 
 lista_de_dispositivos = []
@@ -13,7 +13,7 @@ def mensagens_formatar():
     time.sleep(1)
     subprocess.run("cls", shell=True)
     print("Modo selecionado: Formatar mídias.")
-    print("\nInsira as mídias, " + str(numero_usb) + " no total.")
+    print("\nInsira as mídias, " + str(numero_midias) + " no total.")
     print("\nNúmero de mídias inseridas: " + str(len(lista_de_dispositivos)) + ".")
     print("\n" + str(lista_de_dispositivos))
     print("\nAguardando a inserção de todas as mídias nas portas USBs.")
@@ -25,7 +25,7 @@ def mensagens_copiar():
     time.sleep(1)
     subprocess.run("cls", shell=True)
     print("Modo selecionado: Copiar arquivos para as mídias.")
-    print("\nInsira as mídias, " + str(numero_usb) + " no total.")
+    print("\nInsira as mídias, " + str(numero_midias) + " no total.")
     print("\nNúmero de mídias inseridas: " + str(len(lista_de_dispositivos)) + ".")
     print("\n" + str(lista_de_dispositivos))
     print("\nAguardando a inserção de todas as mídias nas portas USBs.")
@@ -101,10 +101,10 @@ def selecionar_modo():
 
 
 def numero_de_midias():
-    global numero_usb
+    global numero_midias
     global opcao
 
-    numero_usb = input("Entre a quantidade de mídias que serão utilizadas durante a operação: ")
+    numero_midias = input("Entre a quantidade de mídias que serão utilizadas durante a operação: ")
 
     if opcao == "1":
         subprocess.run("cls", shell=True)
@@ -116,7 +116,7 @@ def numero_de_midias():
 
 def formatar_midia():
     global lista_de_dispositivos
-    global numero_usb
+    global numero_midias
 
     lista_de_dispositivos.clear()
 
@@ -130,7 +130,7 @@ def formatar_midia():
 
             mensagens_formatar()
 
-            if len(lista_de_dispositivos) != int(numero_usb):
+            if len(lista_de_dispositivos) != int(numero_midias):
                 lista_de_dispositivos.clear()
             else:
                 break
@@ -153,7 +153,7 @@ def formatar_midia():
 
 def copiar_para_midia():
     global lista_de_dispositivos
-    global numero_usb
+    global numero_midias
 
     lista_de_dispositivos.clear()
 
@@ -167,7 +167,7 @@ def copiar_para_midia():
 
             mensagens_copiar()
 
-            if len(lista_de_dispositivos) != int(numero_usb):
+            if len(lista_de_dispositivos) != int(numero_midias):
                 lista_de_dispositivos.clear()
             else:
                 break
