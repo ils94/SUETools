@@ -41,6 +41,7 @@ def formatar_midia():
     array.clear()
 
     while True:
+
         result = str(
             subprocess.check_output("wmic logicaldisk where drivetype=2 get DeviceID", text=True,
                                     stderr=subprocess.DEVNULL)).replace(
