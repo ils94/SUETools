@@ -73,7 +73,7 @@ def formatar_midia():
             print("\nAguardando a inserção de todas as mídias nas portas USBs.")
 
     subprocess.run("cls", shell=True)
-    print("Iniciando formatação, não remova as mídias durante o processo...\n")
+    print("Iniciando formatação. Não remova as mídias durante o processo...\n")
 
     for midia in array:
         result = subprocess.run("format /q /x /y " + midia + ":", shell=True, stdout=subprocess.DEVNULL,
@@ -135,35 +135,49 @@ def copiar_para_midia():
             print("\nAguardando a inserção de todas as mídias nas portas USBs.\n")
 
     subprocess.run("cls", shell=True)
-    print("Iniciando copia, não remova as mídias durante o processo...\n")
+    print("Formatando a mídia por precaução. Não remova as mídias durante o processo...\n")
+
+    for midia in array:
+        result = subprocess.run("format /q /x /y " + midia + ":", shell=True, stdout=subprocess.DEVNULL,
+                                stderr=subprocess.STDOUT)
+        if str(result.returncode) == "0":
+            print("Unidade " + midia + " formatada com sucesso.")
+        else:
+            print("Ocorreu um erro ao tentar formatar a unidade: " + midia + ".")
+
+    print("\nIniciando copia. Não remova as mídias durante o processo...\n")
 
     for midia in array:
         result = subprocess.run("robocopy C:/copia " + midia + ":", shell=True, stdout=subprocess.DEVNULL,
                                 stderr=subprocess.STDOUT)
-        if str(result.returncode) == "1" or "2" or "3":
-            print("Os arquivos foram copiados com sucesso para: " + midia + ".")
-        elif str(result.returncode) == "0":
+        if str(result.returncode) == "0":
             print("Nenhum erro ocorreu e nenhuma cópia foi feita. "
-                  "As árvores de diretório de origem e destino são completamente sincronizadas em: " + midia + ".")
-        elif str(result.returncode) == "4":
-            print("Alguns arquivos ou diretórios incompatíveis foram detectados em: " + midia + ".")
-        elif str(result.returncode) == "5":
+                  "As árvores de diretório de origem e destino são completamente sincronizadas em: " + midia + ".\n")
+        if str(result.returncode) == "1":
+            print("Os arquivos foram copiados com sucesso para: " + midia + ".\n")
+        if str(result.returncode) == "2":
+            print("Os arquivos foram copiados com sucesso para: " + midia + ".\n")
+        if str(result.returncode) == "3":
+            print("Os arquivos foram copiados com sucesso para: " + midia + ".\n")
+        if str(result.returncode) == "4":
+            print("Alguns arquivos ou diretórios incompatíveis foram detectados em: " + midia + ".\n")
+        if str(result.returncode) == "5":
             print(
-                "Alguns arquivos foram copiados. Alguns arquivos foram incompatíveis. Nenhuma falha foi encontrada em: " + midia + ".")
-        elif str(result.returncode) == "6":
+                "Alguns arquivos foram copiados. Alguns arquivos foram incompatíveis. Nenhuma falha foi encontrada em: " + midia + ".\n")
+        if str(result.returncode) == "6":
             print(
-                "Existem arquivos adicionais e arquivos incompatíveis. Nenhum arquivo foi copiado e nenhuma falha foi encontrada. Isso significa que os arquivos já existem no diretório de destino em: " + midia + ".")
-        elif str(result.returncode) == "7":
+                "Existem arquivos adicionais e arquivos incompatíveis. Nenhum arquivo foi copiado e nenhuma falha foi encontrada. Isso significa que os arquivos já existem no diretório de destino em: " + midia + ".\n")
+        if str(result.returncode) == "7":
             print(
-                "Os arquivos foram copiados, uma incompatibilidade de arquivo estava presente e arquivos adicionais estavam presentes em: " + midia + ".")
-        elif str(result.returncode) == "8":
+                "Os arquivos foram copiados, uma incompatibilidade de arquivo estava presente e arquivos adicionais estavam presentes em: " + midia + ".\n")
+        if str(result.returncode) == "8":
             print(
-                "Alguns arquivos ou diretórios não puderam ser copiados (ocorreram erros de cópia e o limite de repetição foi excedido) em: " + midia + ".")
-        elif str(result.returncode) == "16":
+                "Alguns arquivos ou diretórios não puderam ser copiados (ocorreram erros de cópia e o limite de repetição foi excedido) em: " + midia + ".\n")
+        if str(result.returncode) == "16":
             print(
-                "Erro grave. Robocopy não copiou nenhum arquivo. Um erro de uso ou um erro devido a privilégios de acesso insuficientes nos diretórios de origem ou destino em: " + midia + ".")
+                "Erro grave. Robocopy não copiou nenhum arquivo. Um erro de uso ou um erro devido a privilégios de acesso insuficientes nos diretórios de origem ou destino em: " + midia + ".\n")
 
-    print("\nOperação concluída.")
+    print("Operação concluída.")
     print("\nRemova todas as mídias das portas USBs.")
 
     while True:
