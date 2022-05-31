@@ -12,8 +12,8 @@ def selecionar_modo():
 
     subprocess.run("cls", shell=True)
 
-    opcao = input("Pressione 1 para copiar arquivos para as mídias\n"
-                  "Pressione 2 para formatar as mídias\n\nOpção: ")
+    opcao = input("Pressione 1 para copiar arquivos para as mídias"
+                  "\nPressione 2 para formatar as mídias\n\nOpção: ")
 
     subprocess.run("cls", shell=True)
 
@@ -53,10 +53,11 @@ def formatar_midia():
 
             time.sleep(1)
             subprocess.run("cls", shell=True)
-            print("Modo selecionado: Formatar mídias\n\n")
-            print("Insira as mídias, " + str(numero_usb) + " no total.\n")
-            print("Número de mídias inseridas: " + str(len(array)) + "\n")
-            print(str(array) + "\n")
+            print("Modo selecionado: Formatar mídias.")
+            print("\nInsira as mídias, " + str(numero_usb) + " no total.")
+            print("\nNúmero de mídias inseridas: " + str(len(array)) + ".")
+            print("\n" + str(array))
+            print("\nAguardando a inserção de todas as mídias nas portas USBs.")
 
             if len(array) != int(numero_usb):
                 array.clear()
@@ -65,20 +66,25 @@ def formatar_midia():
         elif str(result) == "":
             time.sleep(1)
             subprocess.run("cls", shell=True)
-            print("Modo selecionado: Formatar mídias\n\n")
-            print("Insira as mídias, " + str(numero_usb) + " no total.\n")
-            print("Número de mídias inseridas: " + str(len(array)) + "\n")
-            print(str(array) + "\n")
+            print("Modo selecionado: Formatar mídias.")
+            print("\nInsira as mídias, " + str(numero_usb) + " no total.")
+            print("\nNúmero de mídias inseridas: " + str(len(array)) + ".")
+            print("\n" + str(array))
+            print("\nAguardando a inserção de todas as mídias nas portas USBs.")
 
-    for usb in array:
-        result = subprocess.run("format /q /x /y " + usb + ":", shell=True, stdout=subprocess.DEVNULL,
+    subprocess.run("cls", shell=True)
+    print("Iniciando formatação, não remova as mídias durante o processo...\n")
+
+    for midia in array:
+        result = subprocess.run("format /q /x /y " + midia + ":", shell=True, stdout=subprocess.DEVNULL,
                                 stderr=subprocess.STDOUT)
         if str(result.returncode) == "0":
-            print("Unidade " + usb + " Formatada com sucesso.")
+            print("Unidade " + midia + " formatada com sucesso.")
         else:
-            print("Unidade " + usb + " Formatação falhou.")
+            print("Ocorreu um erro ao tentar formatar a unidade: " + midia + ".")
 
-    print("\nRemova todas as Mídias")
+    print("\nOperação concluída.")
+    print("\nRemova todas as mídias das portas USBs.")
 
     while True:
         result = str(subprocess.check_output("wmic logicaldisk where drivetype=2 get DeviceID", text=True,
@@ -103,53 +109,62 @@ def copiar_para_midia():
             "\r", "").replace("\n", "").replace("DeviceID  ", "").replace(":        ", "|")
 
         if str(result) != "":
+
             array = result.split("|")
             array.remove("")
             time.sleep(1)
             subprocess.run("cls", shell=True)
-            print("Modo selecionado: Copiar arquivos para mídias\n\n")
-            print("Insira as mídias, " + str(numero_usb) + " no total.\n")
-            print("Número de mídias inseridas: " + str(len(array)) + "\n")
-            print(str(array) + "\n")
+            print("Modo selecionado: Copiar arquivos para as mídias.")
+            print("\nInsira as mídias, " + str(numero_usb) + " no total.")
+            print("\nNúmero de mídias inseridas: " + str(len(array)) + ".")
+            print("\n" + str(array))
+            print("\nAguardando a inserção de todas as mídias nas portas USBs.")
+
             if len(array) != int(numero_usb):
                 array.clear()
             else:
                 break
         elif str(result) == "":
+
             time.sleep(1)
             subprocess.run("cls", shell=True)
-            print("Modo selecionado: Copiar arquivos para mídias\n\n")
-            print("Insira as mídias, " + str(numero_usb) + " no total.\n")
-            print("Número de mídias inseridas: " + str(len(array)) + "\n")
-            print(str(array) + "\n")
+            print("Modo selecionado: Copiar arquivos para as mídias.")
+            print("\nInsira as mídias, " + str(numero_usb) + " no total.")
+            print("\nNúmero de mídias inseridas: " + str(len(array)) + ".")
+            print("\n" + str(array))
+            print("\nAguardando a inserção de todas as mídias nas portas USBs.\n")
+
+    subprocess.run("cls", shell=True)
+    print("Iniciando copia, não remova as mídias durante o processo...\n")
 
     for midia in array:
         result = subprocess.run("robocopy C:/copia " + midia + ":", shell=True, stdout=subprocess.DEVNULL,
                                 stderr=subprocess.STDOUT)
         if str(result.returncode) == "1" or "2" or "3":
-            print("Os arquivos foram copiados com sucesso para: " + midia)
+            print("Os arquivos foram copiados com sucesso para: " + midia + ".")
         elif str(result.returncode) == "0":
             print("Nenhum erro ocorreu e nenhuma cópia foi feita. "
-                  "As árvores de diretório de origem e destino são completamente sincronizadas em: " + midia)
+                  "As árvores de diretório de origem e destino são completamente sincronizadas em: " + midia + ".")
         elif str(result.returncode) == "4":
-            print("Alguns arquivos ou diretórios incompatíveis foram detectados em: " + midia)
+            print("Alguns arquivos ou diretórios incompatíveis foram detectados em: " + midia + ".")
         elif str(result.returncode) == "5":
             print(
-                "Alguns arquivos foram copiados. Alguns arquivos foram incompatíveis. Nenhuma falha foi encontrada em: " + midia)
+                "Alguns arquivos foram copiados. Alguns arquivos foram incompatíveis. Nenhuma falha foi encontrada em: " + midia + ".")
         elif str(result.returncode) == "6":
             print(
-                "Existem arquivos adicionais e arquivos incompatíveis. Nenhum arquivo foi copiado e nenhuma falha foi encontrada. Isso significa que os arquivos já existem no diretório de destino em: " + midia)
+                "Existem arquivos adicionais e arquivos incompatíveis. Nenhum arquivo foi copiado e nenhuma falha foi encontrada. Isso significa que os arquivos já existem no diretório de destino em: " + midia + ".")
         elif str(result.returncode) == "7":
             print(
-                "Os arquivos foram copiados, uma incompatibilidade de arquivo estava presente e arquivos adicionais estavam presentes em: " + midia)
+                "Os arquivos foram copiados, uma incompatibilidade de arquivo estava presente e arquivos adicionais estavam presentes em: " + midia + ".")
         elif str(result.returncode) == "8":
             print(
-                "Alguns arquivos ou diretórios não puderam ser copiados (ocorreram erros de cópia e o limite de repetição foi excedido) em: " + midia)
+                "Alguns arquivos ou diretórios não puderam ser copiados (ocorreram erros de cópia e o limite de repetição foi excedido) em: " + midia + ".")
         elif str(result.returncode) == "16":
             print(
-                "Erro grave. Robocopy não copiou nenhum arquivo. Um erro de uso ou um erro devido a privilégios de acesso insuficientes nos diretórios de origem ou destino em: " + midia)
+                "Erro grave. Robocopy não copiou nenhum arquivo. Um erro de uso ou um erro devido a privilégios de acesso insuficientes nos diretórios de origem ou destino em: " + midia + ".")
 
-    print("\nRemova todas as Mídias")
+    print("\nOperação concluída.")
+    print("\nRemova todas as mídias das portas USBs.")
 
     while True:
         result = str(subprocess.check_output("wmic logicaldisk where drivetype=2 get DeviceID", text=True,
