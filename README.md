@@ -1,2 +1,2 @@
 # SUETools
-Ferramenta para formatação em massa de mídias.
+Ferramenta para formatação e copia em massa de mídias.
