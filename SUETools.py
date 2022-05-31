@@ -31,6 +31,11 @@ def mensagens_copiar():
     print("\nAguardando a inserção de todas as mídias nas portas USBs.")
 
 
+def mensagens_concluido():
+    print("\nOperação concluída.")
+    print("\nRemova todas as mídias das portas USBs.")
+
+
 def formatar(lista):
     for midia in lista:
         result = subprocess.run("format /q /x /y " + midia + ":", shell=True, stdout=subprocess.DEVNULL,
@@ -137,8 +142,7 @@ def formatar_midia():
 
     formatar(lista_de_dispositivos)
 
-    print("\nOperação concluída.")
-    print("\nRemova todas as mídias das portas USBs.")
+    mensagens_concluido()
 
     while True:
         if listar_dispositivos() == "":
@@ -176,12 +180,11 @@ def copiar_para_midia():
 
     formatar(lista_de_dispositivos)
 
-    print("\nIniciando copia. Não remova as mídias durante o processo...\n")
+    print("Iniciando copia. Não remova as mídias durante o processo...\n")
 
     copiar(lista_de_dispositivos)
 
-    print("Operação concluída.")
-    print("\nRemova todas as mídias das portas USBs.")
+    mensagens_concluido()
 
     while True:
         if listar_dispositivos() == "":
