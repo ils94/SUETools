@@ -106,6 +106,13 @@ def numero_de_midias():
 
     numero_midias = input("Entre a quantidade de mídias que serão utilizadas durante a operação: ")
 
+    try:
+        int(numero_midias)
+    except ValueError:
+        subprocess.run("cls", shell=True)
+        print("Apenas números inteiros são permitidos.\n")
+        numero_de_midias()
+
     if opcao == "1":
         subprocess.run("cls", shell=True)
         copiar_para_midia()
