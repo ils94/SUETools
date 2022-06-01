@@ -1,8 +1,10 @@
 import subprocess
 import time
+import os
 
 numero_midias = 0
 opcao = ""
+copiar_de = ""
 
 lista_de_dispositivos = []
 
@@ -38,17 +40,27 @@ def mensagens_concluido():
 
 def formatar(lista):
     for midia in lista:
-        result = subprocess.run("format /q /x /y " + midia + ":", shell=True, stdout=subprocess.DEVNULL,
-                                stderr=subprocess.STDOUT)
-        if str(result.returncode) == "0":
-            print("Unidade " + midia + " formatada com sucesso.")
+        dir = os.listdir(midia + ":/")
+
+        dir.remove("System Volume Information")
+
+        if len(dir) == 0:
+            print("Unidade " + midia + " já foi formatada. Ignorando...")
         else:
-            print("Ocorreu um erro ao tentar formatar a unidade: " + midia + ".")
+            result = subprocess.run("format /q /x /y " + midia + ":", shell=True, stdout=subprocess.DEVNULL,
+                                    stderr=subprocess.STDOUT)
+
+            if str(result.returncode) == "0":
+                print("Unidade " + midia + " formatada com sucesso.")
+            else:
+                print("Ocorreu um erro ao tentar formatar a unidade: " + midia + ".")
 
 
 def copiar(lista):
+    global copiar_de
+
     for midia in lista:
-        result = subprocess.run("robocopy C:/copia " + midia + ":", shell=True, stdout=subprocess.DEVNULL,
+        result = subprocess.run("robocopy " + str(copiar_de) + " " + midia + ":", shell=True, stdout=subprocess.DEVNULL,
                                 stderr=subprocess.STDOUT)
         if str(result.returncode) == "0":
             print("Nenhum erro ocorreu e nenhuma cópia foi feita. "
@@ -115,10 +127,23 @@ def numero_de_midias():
 
     if opcao == "1":
         subprocess.run("cls", shell=True)
-        copiar_para_midia()
+        diretorio_copia()
     else:
         subprocess.run("cls", shell=True)
         formatar_midia()
+
+
+def diretorio_copia():
+    global copiar_de
+
+    copiar_de = input("Insira o diretório com os arquivos que serão copiados: ")
+
+    if os.path.isdir(str(copiar_de)):
+        copiar_para_midia()
+    else:
+        subprocess.run("cls", shell=True)
+        print("Diretório não existe.\n")
+        diretorio_copia()
 
 
 def formatar_midia():
@@ -187,7 +212,7 @@ def copiar_para_midia():
 
     formatar(lista_de_dispositivos)
 
-    print("Iniciando copia. Não remova as mídias durante o processo...\n")
+    print("\nIniciando copia. Não remova as mídias durante o processo...\n")
 
     copiar(lista_de_dispositivos)
 
