@@ -109,6 +109,11 @@ def selecionar_modo():
 
     subprocess.run("cls", shell=True)
 
+    if opcao == "1":
+        print("Copiar arquivos para as mídias.\n")
+    else:
+        print("Formatar mídias.\n")
+
     numero_de_midias()
 
 
@@ -116,34 +121,44 @@ def numero_de_midias():
     global numero_midias
     global opcao
 
+    print("Para voltar ao menu inicial, digite ''voltar''.\n")
+
     numero_midias = input("Entre a quantidade de mídias que serão utilizadas durante a operação: ")
 
-    try:
-        int(numero_midias)
-    except ValueError:
-        subprocess.run("cls", shell=True)
-        print("Apenas números inteiros são permitidos.\n")
-        numero_de_midias()
-
-    if opcao == "1":
-        subprocess.run("cls", shell=True)
-        diretorio_copia()
+    if numero_midias == "voltar":
+        selecionar_modo()
     else:
-        subprocess.run("cls", shell=True)
-        formatar_midia()
+        try:
+            int(numero_midias)
+        except ValueError:
+            subprocess.run("cls", shell=True)
+            print("Apenas números inteiros são permitidos.\n")
+            numero_de_midias()
+
+        if opcao == "1":
+            subprocess.run("cls", shell=True)
+            diretorio_copia()
+        else:
+            subprocess.run("cls", shell=True)
+            formatar_midia()
 
 
 def diretorio_copia():
     global copiar_de
 
+    print("Para voltar ao menu inicial, digite ''voltar''.\n")
+
     copiar_de = input("Insira o diretório com os arquivos que serão copiados: ")
 
-    if os.path.isdir(str(copiar_de)):
-        copiar_para_midia()
+    if copiar_de == "voltar":
+        selecionar_modo()
     else:
-        subprocess.run("cls", shell=True)
-        print("Diretório não existe.\n")
-        diretorio_copia()
+        if os.path.isdir(str(copiar_de)):
+            copiar_para_midia()
+        else:
+            subprocess.run("cls", shell=True)
+            print("Diretório não existe.\n")
+            diretorio_copia()
 
 
 def formatar_midia():
