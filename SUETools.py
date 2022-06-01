@@ -1,6 +1,7 @@
 import subprocess
 import time
 import os
+import keyboard
 
 numero_midias = 0
 opcao = ""
@@ -42,8 +43,8 @@ def mensagens_copiar():
 
 
 def mensagens_concluido():
-    print(f"{BColors.OKGREEN}Operação concluída." + BColors.ENDC)
-    print(f"{BColors.OKGREEN}Remova todas as mídias das portas USBs." + BColors.ENDC)
+    print(f"{BColors.OKGREEN}\nOperação concluída." + BColors.ENDC)
+    print(f"{BColors.OKGREEN}\nRemova todas as mídias das portas USBs." + BColors.ENDC)
 
 
 def formatar(lista):
@@ -80,7 +81,8 @@ def copiar(lista):
         if str(result.returncode) == "3":
             print(f"{BColors.OKBLUE}Os arquivos foram copiados com sucesso para: " + midia + ".\n" + BColors.ENDC)
         if str(result.returncode) == "4":
-            print(f"{BColors.WARNING}Alguns arquivos ou diretórios incompatíveis foram detectados em: " + midia + ".\n" + BColors.ENDC)
+            print(
+                f"{BColors.WARNING}Alguns arquivos ou diretórios incompatíveis foram detectados em: " + midia + ".\n" + BColors.ENDC)
         if str(result.returncode) == "5":
             print(
                 f"{BColors.WARNING}Alguns arquivos foram copiados. Alguns arquivos foram incompatíveis. Nenhuma falha foi encontrada em: " + midia + ".\n" + BColors.ENDC)
@@ -177,6 +179,9 @@ def formatar_midia():
 
     while True:
 
+        if keyboard.is_pressed("Esc"):
+            selecionar_modo()
+
         result = listar_dispositivos()
 
         if str(result) != "":
@@ -213,6 +218,10 @@ def copiar_para_midia():
     lista_de_dispositivos.clear()
 
     while True:
+
+        if keyboard.is_pressed("Esc"):
+            selecionar_modo()
+
         result = listar_dispositivos()
 
         if str(result) != "":
@@ -231,7 +240,8 @@ def copiar_para_midia():
             mensagens_copiar()
 
     subprocess.run("cls", shell=True)
-    print(f"{BColors.WARNING}Formatando a mídia por precaução. Não remova as mídias durante o processo...\n" + BColors.ENDC)
+    print(
+        f"{BColors.WARNING}Formatando a mídia por precaução. Não remova as mídias durante o processo...\n" + BColors.ENDC)
 
     formatar(lista_de_dispositivos)
 
