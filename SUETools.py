@@ -32,10 +32,12 @@ def mensagens_formatar():
 
 def mensagens_copiar():
     global lista_de_dispositivos
+    global copiar_de
 
     time.sleep(1)
     subprocess.run("cls", shell=True)
     print("Modo selecionado: Copiar arquivos para as mídias.")
+    print("\nDiretório de origem dos arquivos copiados: " + copiar_de)
     print("\nInsira as mídias, " + str(numero_midias) + " no total.")
     print("\nNúmero de mídias inseridas: " + str(len(lista_de_dispositivos)) + ".")
     print("\n" + str(lista_de_dispositivos))
@@ -98,6 +100,15 @@ def copiar(lista):
         if str(result.returncode) == "16":
             print(
                 f"{BColors.FAIL}Erro grave. Robocopy não copiou nenhum arquivo. Um erro de uso ou um erro devido a privilégios de acesso insuficientes nos diretórios de origem ou destino em: " + midia + ".\n" + BColors.ENDC)
+
+        for midia in lista:
+            dir = os.listdir(midia + ":/")
+
+            dir.remove("System Volume Information")
+
+            print("Um total de " + str(len(dir)) + " arquivos foram copiados.\n")
+            print("Lista de arquivos copiados:")
+            print("\n" + str(dir) + "\n")
 
 
 def listar_dispositivos():
