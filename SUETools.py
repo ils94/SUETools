@@ -8,6 +8,7 @@ opcao = ""
 copiar_de = ""
 
 lista_de_dispositivos = []
+lista_arquivos = []
 
 
 class BColors:
@@ -34,28 +35,30 @@ def mensagens_formatar():
 def mensagens_copiar():
     global lista_de_dispositivos
     global copiar_de
+    global lista_arquivos
 
     time.sleep(1)
     subprocess.run("cls", shell=True)
     print("Modo selecionado: Copiar arquivos para as mídias.")
     print("\nSegure ESC para voltar ao menu inicial.")
-    print("\nDiretório de origem dos arquivos copiados: " + copiar_de)
+    print(f"{BColors.WARNING}\nDiretório de origem dos arquivos copiados: " + copiar_de + BColors.ENDC)
+    print(f"{BColors.WARNING}\nUm total de " + str(
+        len(lista_arquivos)) + " arquivos serão copiados para as mídias." + BColors.ENDC)
+    print("\nLista de arquivos que serão copiados:")
+    print("\n" + str(lista_arquivos))
     print("\nInsira as mídias, " + str(numero_midias) + " no total.")
     print("\nNúmero de mídias inseridas: " + str(len(lista_de_dispositivos)) + ".")
     print("\n" + str(lista_de_dispositivos))
     print(f"{BColors.WARNING}\nAguardando a inserção de todas as mídias nas portas USBs." + BColors.ENDC)
 
 
-def mensagens_concluido():
-    print(f"{BColors.OKGREEN}\nOperação concluída." + BColors.ENDC)
-    print(f"{BColors.OKGREEN}\nRemova todas as mídias das portas USBs." + BColors.ENDC)
-
-
 def formatar(lista):
     for midia in lista:
-        dir = os.listdir(midia + ":/")
+        dir = []
 
-        dir.remove("System Volume Information")
+        for file in os.listdir(midia + ":/"):
+            if os.path.isfile(os.path.join(midia + ":/", file)):
+                dir.append(file)
 
         if len(dir) == 0:
             print(f"{BColors.WARNING}Unidade " + midia + " já foi formatada. Ignorando..." + BColors.ENDC)
@@ -77,40 +80,40 @@ def copiar(lista):
                                 stderr=subprocess.STDOUT)
         if str(result.returncode) == "0":
             print(f"{BColors.WARNING}Nenhum erro ocorreu e nenhuma cópia foi feita. "
-                  "As árvores de diretório de origem e destino são completamente sincronizadas em: " + midia + ".\n" + BColors.ENDC)
+                  "As árvores de diretório de origem e destino são completamente sincronizadas em: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "1":
-            print(f"{BColors.OKBLUE}Os arquivos foram copiados com sucesso para: " + midia + ".\n" + BColors.ENDC)
+            print(f"{BColors.OKBLUE}Os arquivos foram copiados com sucesso para: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "2":
-            print(f"{BColors.OKBLUE}Os arquivos foram copiados com sucesso para: " + midia + ".\n" + BColors.ENDC)
+            print(f"{BColors.OKBLUE}Os arquivos foram copiados com sucesso para: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "3":
-            print(f"{BColors.OKBLUE}Os arquivos foram copiados com sucesso para: " + midia + ".\n" + BColors.ENDC)
+            print(f"{BColors.OKBLUE}Os arquivos foram copiados com sucesso para: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "4":
             print(
-                f"{BColors.WARNING}Alguns arquivos ou diretórios incompatíveis foram detectados em: " + midia + ".\n" + BColors.ENDC)
+                f"{BColors.WARNING}Alguns arquivos ou diretórios incompatíveis foram detectados em: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "5":
             print(
-                f"{BColors.WARNING}Alguns arquivos foram copiados. Alguns arquivos foram incompatíveis. Nenhuma falha foi encontrada em: " + midia + ".\n" + BColors.ENDC)
+                f"{BColors.WARNING}Alguns arquivos foram copiados. Alguns arquivos foram incompatíveis. Nenhuma falha foi encontrada em: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "6":
             print(
-                f"{BColors.WARNING}Existem arquivos adicionais e arquivos incompatíveis. Nenhum arquivo foi copiado e nenhuma falha foi encontrada. Isso significa que os arquivos já existem no diretório de destino em: " + midia + ".\n" + BColors.ENDC)
+                f"{BColors.WARNING}Existem arquivos adicionais e arquivos incompatíveis. Nenhum arquivo foi copiado e nenhuma falha foi encontrada. Isso significa que os arquivos já existem no diretório de destino em: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "7":
             print(
-                f"{BColors.WARNING}Os arquivos foram copiados, uma incompatibilidade de arquivo estava presente e arquivos adicionais estavam presentes em: " + midia + ".\n" + BColors.ENDC)
+                f"{BColors.WARNING}Os arquivos foram copiados, uma incompatibilidade de arquivo estava presente e arquivos adicionais estavam presentes em: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "8":
             print(
-                f"{BColors.FAIL}Alguns arquivos ou diretórios não puderam ser copiados (ocorreram erros de cópia e o limite de repetição foi excedido) em: " + midia + ".\n" + BColors.ENDC)
+                f"{BColors.FAIL}Alguns arquivos ou diretórios não puderam ser copiados (ocorreram erros de cópia e o limite de repetição foi excedido) em: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "16":
             print(
-                f"{BColors.FAIL}Erro grave. Robocopy não copiou nenhum arquivo. Um erro de uso ou um erro devido a privilégios de acesso insuficientes nos diretórios de origem ou destino em: " + midia + ".\n" + BColors.ENDC)
+                f"{BColors.FAIL}Erro grave. Robocopy não copiou nenhum arquivo. Um erro de uso ou um erro devido a privilégios de acesso insuficientes nos diretórios de origem ou destino em: " + midia + "." + BColors.ENDC)
 
-        for midia in lista:
-            dir = os.listdir(midia + ":/")
+        dir = []
 
-            dir.remove("System Volume Information")
+        if os.path.isdir(midia + ":/"):
+            for file in os.listdir(midia + ":/"):
+                if os.path.isfile(os.path.join(midia + ":/", file)):
+                    dir.append(file)
 
-            print("Um total de " + str(len(dir)) + " arquivos foram copiados.\n")
-            print("Lista de arquivos copiados:")
-            print("\n" + str(dir) + "\n")
+        print(f"{BColors.WARNING}Um total de " + str(len(dir)) + " arquivos foram copiados.\n" + BColors.ENDC)
 
 
 def listar_dispositivos():
@@ -124,6 +127,9 @@ def listar_dispositivos():
 
 def selecionar_modo():
     global opcao
+    global lista_arquivos
+
+    lista_arquivos.clear()
 
     subprocess.run("cls", shell=True)
 
@@ -176,7 +182,11 @@ def diretorio_copia():
     if copiar_de == "voltar":
         selecionar_modo()
     else:
-        if os.path.isdir(str(copiar_de)):
+        if os.path.isdir(copiar_de):
+            for file in os.listdir(copiar_de):
+                if os.path.isfile(os.path.join(copiar_de, file)):
+                    lista_arquivos.append(file)
+
             copiar_para_midia()
         else:
             subprocess.run("cls", shell=True)
@@ -215,7 +225,8 @@ def formatar_midia():
 
     formatar(lista_de_dispositivos)
 
-    mensagens_concluido()
+    print(f"{BColors.OKGREEN}\nOperação concluída." + BColors.ENDC)
+    print(f"{BColors.OKGREEN}\nRemova todas as mídias das portas USBs." + BColors.ENDC)
 
     while True:
         if listar_dispositivos() == "":
@@ -262,7 +273,8 @@ def copiar_para_midia():
 
     copiar(lista_de_dispositivos)
 
-    mensagens_concluido()
+    print(f"{BColors.OKGREEN}Operação concluída." + BColors.ENDC)
+    print(f"{BColors.OKGREEN}\nRemova todas as mídias das portas USBs." + BColors.ENDC)
 
     while True:
         if listar_dispositivos() == "":
