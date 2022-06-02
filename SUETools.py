@@ -54,11 +54,8 @@ def mensagens_copiar():
 
 def formatar(lista):
     for midia in lista:
-        dir = []
-
-        for file in os.listdir(midia + ":/"):
-            if os.path.isfile(os.path.join(midia + ":/", file)):
-                dir.append(file)
+        dir = os.listdir(midia + ":/")
+        dir.remove("System Volume Information")
 
         if len(dir) == 0:
             print(f"{BColors.WARNING}Unidade " + midia + " já foi formatada. Ignorando..." + BColors.ENDC)
