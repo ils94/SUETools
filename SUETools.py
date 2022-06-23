@@ -58,8 +58,6 @@ def formatar(lista):
 
         if "System Volume Information" in dir:
             dir.remove("System Volume Information")
-        if "Lixeira" in dir:
-            dir.remove("Lixeira")
 
         if len(dir) == 0:
             print(f"{BColors.WARNING}Unidade " + midia + " já foi formatada. Ignorando..." + BColors.ENDC)
