@@ -63,33 +63,47 @@ def mensagens_formatar_flashcard():
     print(f"{BColors.WARNING}\nAguardando a inserção do Flashcard." + BColors.ENDC)
 
 
-def formatar(lista):
-    try:
-        for mrs in lista:
-            dir = os.listdir(mrs + ":/")
+def formatar(lista_de_mrs):
+    global lista_de_dispositivos
+    global opcao
+
+    erro_critico = False
+    erro_lista = []
+
+    for mr in lista_de_mrs:
+        try:
+            dir = os.listdir(mr + ":/")
 
             if "System Volume Information" in dir:
                 dir.remove("System Volume Information")
 
             if len(dir) == 0:
-                print(f"{BColors.WARNING}Unidade " + mrs + " já foi formatada. Ignorando..." + BColors.ENDC)
+                print(f"{BColors.WARNING}Unidade " + mr + " já foi formatada. Ignorando..." + BColors.ENDC)
             else:
-                result = subprocess.run("format /q /x /y " + mrs + ":", shell=True, stdout=subprocess.DEVNULL,
+                result = subprocess.run("format /q /x /y " + mr + ":", shell=True, stdout=subprocess.DEVNULL,
                                         stderr=subprocess.STDOUT)
 
                 if str(result.returncode) == "0":
-                    print(f"{BColors.OKBLUE}Unidade " + mrs + " formatada com sucesso." + BColors.ENDC)
+                    print(f"{BColors.OKBLUE}Unidade " + mr + " formatada com sucesso." + BColors.ENDC)
                 else:
-                    print(f"{BColors.FAIL}Ocorreu um erro ao tentar formatar a unidade: " + mrs + "." + BColors.ENDC)
-    except Exception as e:
-        print(str(f"{BColors.FAIL} " + str(e) + BColors.ENDC))
+                    print(f"{BColors.FAIL}Ocorreu um erro ao tentar formatar a unidade: " + mr + "." + BColors.ENDC)
+        except Exception as e:
+            print(str(f"{BColors.FAIL} " + str(e) + BColors.ENDC))
+            erro_critico = True
+            erro_lista.append(mr)
+            continue
+
+    if erro_critico and opcao == "1":
+        for e in erro_lista:
+            lista_de_dispositivos.remove(e)
 
 
 def copiar(lista):
     global copiar_de
 
     for mrs in lista:
-        result = subprocess.run("robocopy " + str(copiar_de) + " " + mrs + ":", shell=True, stdout=subprocess.DEVNULL,
+        result = subprocess.run("robocopy " + str(copiar_de) + " " + mrs + ":", shell=True,
+                                stdout=subprocess.DEVNULL,
                                 stderr=subprocess.STDOUT)
         if str(result.returncode) == "0":
             print(f"{BColors.WARNING}Nenhum erro ocorreu e nenhuma cópia foi feita. "
