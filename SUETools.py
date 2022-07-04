@@ -27,6 +27,7 @@ def mensagens_formatar_mr():
     subprocess.run("cls", shell=True)
     print("Modo selecionado: Formatar MRs.")
     print("\nSegure ESC para voltar ao Menu inicial.")
+    print("\nSegure F para forçar a operação.")
     print("\nInsira as MRs, " + str(numero_mrs) + " no total.")
     print("\nNúmero de MRs inseridas: " + str(len(lista_de_dispositivos)) + ".")
     print("\n" + str(lista_de_dispositivos))
@@ -42,6 +43,7 @@ def mensagens_copiar_mr():
     subprocess.run("cls", shell=True)
     print("Modo selecionado: Copiar arquivos para as MRs.")
     print("\nSegure ESC para voltar ao Menu inicial.")
+    print("\nSegure F para forçar a operação.")
     print(f"{BColors.WARNING}\nDiretório de origem dos arquivos copiados: " + copiar_de + BColors.ENDC)
     print(f"{BColors.WARNING}\nUm total de " + str(
         len(lista_arquivos)) + " arquivos serão copiados para as MRs." + BColors.ENDC)
@@ -241,6 +243,9 @@ def formatar_mrs():
 
             mensagens_formatar_mr()
 
+            if keyboard.is_pressed("F"):
+                break
+
             if len(lista_de_dispositivos) != int(numero_mrs):
                 lista_de_dispositivos.clear()
             else:
@@ -282,6 +287,9 @@ def copiar_para_mrs():
             lista_de_dispositivos.remove("")
 
             mensagens_copiar_mr()
+
+            if keyboard.is_pressed("F"):
+                break
 
             if len(lista_de_dispositivos) != int(numero_mrs):
                 lista_de_dispositivos.clear()
