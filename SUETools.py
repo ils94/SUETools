@@ -257,12 +257,15 @@ def formatar_mrs():
 
     print(f"{BColors.OKGREEN}\nOperação concluída." + BColors.ENDC)
     print(f"{BColors.OKGREEN}\nRemova todas as MRs das portas USBs." + BColors.ENDC)
-    print(f'{BColors.OKGREEN}\nOu segure "K" para formatar novamente.' + BColors.ENDC)
+    print(f'{BColors.OKGREEN}\nSegure "K" para formatar novamente.' + BColors.ENDC)
+    print(f'{BColors.OKGREEN}\nSegure "ESC" para voltar ao Menu Inicial.' + BColors.ENDC)
 
     while True:
         if listar_dispositivos() == "":
             break
         elif keyboard.is_pressed("K"):
+            break
+        elif keyboard.is_pressed("ESC"):
             break
 
     formatar_mrs()
@@ -295,12 +298,15 @@ def copiar_para_mrs():
 
     print(f"{BColors.OKGREEN}Operação concluída." + BColors.ENDC)
     print(f"{BColors.OKGREEN}\nRemova todas as MRs das portas USBs." + BColors.ENDC)
-    print(f'{BColors.OKGREEN}\nOu segure "K" para copiar novamente.' + BColors.ENDC)
+    print(f'{BColors.OKGREEN}\nSegure "K" para copiar novamente.' + BColors.ENDC)
+    print(f'{BColors.OKGREEN}\nSegure "ESC" para voltar ao Menu Inicial.' + BColors.ENDC)
 
     while True:
         if listar_dispositivos() == "":
             break
         elif keyboard.is_pressed("K"):
+            break
+        elif keyboard.is_pressed("ESC"):
             break
 
     copiar_para_mrs()
