@@ -295,9 +295,12 @@ def copiar_para_mrs():
 
     print(f"{BColors.OKGREEN}Operação concluída." + BColors.ENDC)
     print(f"{BColors.OKGREEN}\nRemova todas as MRs das portas USBs." + BColors.ENDC)
+    print(f'{BColors.OKGREEN}\nOu segure "K" para copiar novamente.' + BColors.ENDC)
 
     while True:
         if listar_dispositivos() == "":
+            break
+        elif keyboard.is_pressed("K"):
             break
 
     copiar_para_mrs()
