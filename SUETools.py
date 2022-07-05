@@ -10,6 +10,8 @@ drivetype = ""
 
 lista_de_dispositivos = []
 lista_arquivos = []
+erro_critico = None
+erro_lista = []
 
 
 class BColors:
@@ -26,8 +28,8 @@ def mensagens_formatar_mr():
     time.sleep(1)
     subprocess.run("cls", shell=True)
     print("Modo selecionado: Formatar MRs.")
-    print("\nSegure ESC para voltar ao Menu inicial.")
-    print("\nSegure F para forçar a operação.")
+    print('\nSegure "ESC" para cancelar a operação, e voltar ao Menu Inicial.')
+    print('\nSegure "F" para forçar a operação.')
     print("\nInsira as MRs, " + str(numero_mrs) + " no total.")
     print("\nNúmero de MRs inseridas: " + str(len(lista_de_dispositivos)) + ".")
     print("\n" + str(lista_de_dispositivos))
@@ -42,8 +44,8 @@ def mensagens_copiar_mr():
     time.sleep(1)
     subprocess.run("cls", shell=True)
     print("Modo selecionado: Copiar arquivos para as MRs.")
-    print("\nSegure ESC para voltar ao Menu inicial.")
-    print("\nSegure F para forçar a operação.")
+    print('\nSegure "ESC" para cancelar a operação, e voltar ao Menu Inicial.')
+    print('\nSegure "F" para forçar a operação.')
     print(f"{BColors.WARNING}\nDiretório de origem dos arquivos copiados: " + copiar_de + BColors.ENDC)
     print(f"{BColors.WARNING}\nUm total de " + str(
         len(lista_arquivos)) + " arquivos serão copiados para as MRs." + BColors.ENDC)
@@ -55,20 +57,22 @@ def mensagens_copiar_mr():
     print(f"{BColors.WARNING}\nAguardando a inserção de todas as MRs nas portas USBs." + BColors.ENDC)
 
 
-def mensagens_formatar_flashcard():
+def mensagens_formatar_fmc():
     time.sleep(1)
     subprocess.run("cls", shell=True)
-    print("Modo selecionado: Formatar Flashcard.")
-    print("\nSegure ESC para voltar ao Menu inicial.")
-    print(f"{BColors.WARNING}\nAguardando a inserção do Flashcard." + BColors.ENDC)
+    print("Modo selecionado: Formatar Flash Memory Card.")
+    print('\nSegure "ESC" para cancelar a operação, e voltar ao Menu Inicial.')
+    print(f"{BColors.WARNING}\nAguardando a inserção do Flash Memory Card." + BColors.ENDC)
 
 
 def formatar(lista_de_mrs):
     global lista_de_dispositivos
     global opcao
+    global erro_critico
+    global erro_lista
 
     erro_critico = False
-    erro_lista = []
+    erro_lista.clear()
 
     for mr in lista_de_mrs:
         try:
@@ -169,9 +173,9 @@ def selecionar_modo():
 
     subprocess.run("cls", shell=True)
 
-    opcao = input("Digite 1 para copiar arquivos para as MRs."
-                  "\nDigite 2 para formatar as MRs."
-                  "\nDigite 3 para formatar Flashcard.\n\nOpção: ")
+    opcao = input('Digite "1" para copiar arquivos para as MRs.'
+                  '\nDigite "2" para formatar as MRs.'
+                  '\nDigite "3" para formatar um Flash Memory Card.\n\nOpção: ')
 
     subprocess.run("cls", shell=True)
 
@@ -185,7 +189,7 @@ def selecionar_modo():
         numero_de_mrs()
     if opcao == "3":
         drivetype = "3"
-        formatar_flashcard()
+        formatar_fmc()
     else:
         selecionar_modo()
 
@@ -194,11 +198,11 @@ def numero_de_mrs():
     global numero_mrs
     global opcao
 
-    print("Para voltar ao Menu inicial, digite ''voltar''.\n")
+    print('Digite "menu" para voltar ao Menu Inicial.\n')
 
     numero_mrs = input("Entre a quantidade de MRs que serão utilizadas durante a operação: ")
 
-    if numero_mrs == "voltar":
+    if numero_mrs == "menu":
         selecionar_modo()
     else:
         try:
@@ -219,11 +223,16 @@ def numero_de_mrs():
 def diretorio_copia():
     global copiar_de
 
-    print("Para voltar ao Menu inicial, digite ''voltar''.\n")
+    print('Digite "voltar" para voltar a etapa de quantidade de MRs para a operação.\n')
+    print('Digite "menu" para voltar ao Menu Inicial.\n')
 
     copiar_de = input("Insira o diretório com os arquivos que serão copiados: ")
 
     if copiar_de == "voltar":
+        subprocess.run("cls", shell=True)
+        numero_de_mrs()
+    elif copiar_de == "menu":
+        subprocess.run("cls", shell=True)
         selecionar_modo()
     else:
         if os.path.isdir(copiar_de):
@@ -234,38 +243,12 @@ def diretorio_copia():
             copiar_para_mrs()
         else:
             subprocess.run("cls", shell=True)
-            print(f"{BColors.FAIL}Diretório não existe.\n" + BColors.ENDC)
+            print(f'{BColors.FAIL}Diretório "' + copiar_de + '" não existe.\n' + BColors.ENDC)
             diretorio_copia()
 
 
 def formatar_mrs():
-    global lista_de_dispositivos
-    global numero_mrs
-
-    lista_de_dispositivos.clear()
-
-    while True:
-
-        if keyboard.is_pressed("Esc"):
-            selecionar_modo()
-
-        result = listar_dispositivos()
-
-        if str(result) != "":
-            lista_de_dispositivos = result.split("|")
-            lista_de_dispositivos.remove("")
-
-            mensagens_formatar_mr()
-
-            if keyboard.is_pressed("F"):
-                break
-
-            if len(lista_de_dispositivos) != int(numero_mrs):
-                lista_de_dispositivos.clear()
-            else:
-                break
-        elif str(result) == "":
-            mensagens_formatar_mr()
+    usb_watcher(mensagens_formatar_mr)
 
     subprocess.run("cls", shell=True)
     print(f"{BColors.WARNING}Iniciando formatação. Não remova as MRs durante o processo...\n" + BColors.ENDC)
@@ -274,44 +257,22 @@ def formatar_mrs():
 
     print(f"{BColors.OKGREEN}\nOperação concluída." + BColors.ENDC)
     print(f"{BColors.OKGREEN}\nRemova todas as MRs das portas USBs." + BColors.ENDC)
+    print(f'{BColors.OKGREEN}\nOu segure "K" para formatar novamente.' + BColors.ENDC)
 
     while True:
         if listar_dispositivos() == "":
+            break
+        elif keyboard.is_pressed("K"):
             break
 
     formatar_mrs()
 
 
 def copiar_para_mrs():
-    global lista_de_dispositivos
-    global numero_mrs
+    global erro_lista
+    global erro_critico
 
-    lista_de_dispositivos.clear()
-
-    while True:
-
-        if keyboard.is_pressed("Esc"):
-            selecionar_modo()
-
-        result = listar_dispositivos()
-
-        if str(result) != "":
-
-            lista_de_dispositivos = result.split("|")
-            lista_de_dispositivos.remove("")
-
-            mensagens_copiar_mr()
-
-            if keyboard.is_pressed("F"):
-                break
-
-            if len(lista_de_dispositivos) != int(numero_mrs):
-                lista_de_dispositivos.clear()
-            else:
-                break
-        elif str(result) == "":
-
-            mensagens_copiar_mr()
+    usb_watcher(mensagens_copiar_mr)
 
     subprocess.run("cls", shell=True)
     print(
@@ -319,9 +280,18 @@ def copiar_para_mrs():
 
     formatar(lista_de_dispositivos)
 
-    print(f"{BColors.WARNING}\nIniciando copia. Não remova as MRs durante o processo...\n" + BColors.ENDC)
+    if len(lista_de_dispositivos) > 0:
 
-    copiar(lista_de_dispositivos)
+        print(f"{BColors.WARNING}\nIniciando copia. Não remova as MRs durante o processo...\n" + BColors.ENDC)
+
+        copiar(lista_de_dispositivos)
+
+        if erro_critico:
+            print(f"{BColors.FAIL}Não foi possível copiar os arquivos para algumas MRs:" + BColors.ENDC)
+            print(f"{BColors.FAIL}\n" + str(erro_lista) + "\n" + BColors.ENDC)
+
+    else:
+        print(f"{BColors.FAIL}\nNão foi possível copiar os arquivos para as MRs.\n" + BColors.ENDC)
 
     print(f"{BColors.OKGREEN}Operação concluída." + BColors.ENDC)
     print(f"{BColors.OKGREEN}\nRemova todas as MRs das portas USBs." + BColors.ENDC)
@@ -333,7 +303,7 @@ def copiar_para_mrs():
     copiar_para_mrs()
 
 
-def formatar_flashcard():
+def formatar_fmc():
     global lista_de_dispositivos
 
     lista_de_dispositivos.clear()
@@ -348,28 +318,59 @@ def formatar_flashcard():
         if str(result) != "":
             lista_de_dispositivos.append(result)
 
-            mensagens_formatar_flashcard()
+            mensagens_formatar_fmc()
 
             if len(lista_de_dispositivos) != 1:
                 lista_de_dispositivos.clear()
             else:
                 break
         elif str(result) == "":
-            mensagens_formatar_flashcard()
+            mensagens_formatar_fmc()
 
     subprocess.run("cls", shell=True)
-    print(f"{BColors.WARNING}Iniciando formatação. Não remova o Flashcard durante o processo...\n" + BColors.ENDC)
+    print(
+        f"{BColors.WARNING}Iniciando formatação. Não remova o Flash Memory Card durante o processo...\n" + BColors.ENDC)
 
     formatar(lista_de_dispositivos)
 
     print(f"{BColors.OKGREEN}\nOperação concluída." + BColors.ENDC)
-    print(f"{BColors.OKGREEN}\nRemova o Flashcard." + BColors.ENDC)
+    print(f"{BColors.OKGREEN}\nRemova o Flash Memory Card." + BColors.ENDC)
 
     while True:
         if listar_dispositivos() == "":
             break
 
-    formatar_flashcard()
+    formatar_fmc()
+
+
+def usb_watcher(mensagens):
+    global lista_de_dispositivos
+    global numero_mrs
+
+    lista_de_dispositivos.clear()
+
+    while True:
+
+        if keyboard.is_pressed("Esc"):
+            selecionar_modo()
+
+        result = listar_dispositivos()
+
+        if str(result) != "":
+            lista_de_dispositivos = result.split("|")
+            lista_de_dispositivos.remove("")
+
+            mensagens()
+
+            if keyboard.is_pressed("F"):
+                break
+
+            if len(lista_de_dispositivos) < int(numero_mrs):
+                lista_de_dispositivos.clear()
+            else:
+                break
+        elif str(result) == "":
+            mensagens()
 
 
 selecionar_modo()
