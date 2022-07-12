@@ -2,6 +2,7 @@ import subprocess
 import time
 import os
 import keyboard
+import winsound
 
 numero_mrs = 0
 opcao = ""
@@ -156,10 +157,8 @@ def listar_dispositivos():
         "\r", "").replace("\n", "").replace("DeviceID  ", "").replace(":        ", "|")
 
     if drivetype == "3":
-        if "E" in result:
-            return "E"
-        else:
-            return ""
+        result = result.replace("C", "").replace("D", "").replace("|", "")
+        return result
     if drivetype == "2":
         return result
 
@@ -260,6 +259,8 @@ def formatar_mrs():
     print(f'{BColors.OKGREEN}\nSegure "K" para formatar novamente.' + BColors.ENDC)
     print(f'{BColors.OKGREEN}\nSegure "ESC" para voltar ao Menu Inicial.' + BColors.ENDC)
 
+    alerta()
+
     while True:
         if listar_dispositivos() == "":
             break
@@ -300,6 +301,8 @@ def copiar_para_mrs():
     print(f"{BColors.OKGREEN}\nRemova todas as MRs das portas USBs." + BColors.ENDC)
     print(f'{BColors.OKGREEN}\nSegure "K" para copiar novamente.' + BColors.ENDC)
     print(f'{BColors.OKGREEN}\nSegure "ESC" para voltar ao Menu Inicial.' + BColors.ENDC)
+
+    alerta()
 
     while True:
         if listar_dispositivos() == "":
@@ -345,6 +348,8 @@ def formatar_fmc():
     print(f"{BColors.OKGREEN}\nOperação concluída." + BColors.ENDC)
     print(f"{BColors.OKGREEN}\nRemova o Flash Memory Card." + BColors.ENDC)
 
+    alerta()
+
     while True:
         if listar_dispositivos() == "":
             break
@@ -380,6 +385,10 @@ def usb_watcher(mensagens):
                 break
         elif str(result) == "":
             mensagens()
+
+
+def alerta():
+    winsound.MessageBeep()
 
 
 selecionar_modo()
