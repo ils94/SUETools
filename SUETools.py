@@ -2,7 +2,7 @@ import subprocess
 import time
 import os
 import keyboard
-import winsound
+from playsound import playsound
 
 numero_mrs = 0
 opcao = ""
@@ -388,7 +388,7 @@ def usb_watcher(mensagens):
 
 
 def alerta():
-    winsound.MessageBeep()
+    playsound("audios/oc.mp3")
 
 
 selecionar_modo()
