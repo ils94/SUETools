@@ -1,8 +1,10 @@
 import subprocess
+import threading
 import time
 import os
 import keyboard
 from playsound import playsound
+from threading import Thread
 
 numero_mrs = 0
 opcao = ""
@@ -249,10 +251,10 @@ def diretorio_copia():
 def formatar_mrs():
     usb_watcher(mensagens_formatar_mr)
 
-    alerta_operacao_iniciada()
-
     subprocess.run("cls", shell=True)
     print(f"{BColors.WARNING}Iniciando formatação. Não remova as MRs durante o processo...\n" + BColors.ENDC)
+
+    alerta_operacao_iniciada()
 
     formatar(lista_de_dispositivos)
 
@@ -280,11 +282,11 @@ def copiar_para_mrs():
 
     usb_watcher(mensagens_copiar_mr)
 
-    alerta_operacao_iniciada()
-
     subprocess.run("cls", shell=True)
     print(
         f"{BColors.WARNING}Formatando as MRs por precaução. Não remova as MRs durante o processo...\n" + BColors.ENDC)
+
+    alerta_operacao_iniciada()
 
     formatar(lista_de_dispositivos)
 
@@ -343,11 +345,11 @@ def formatar_fmc():
         elif str(result) == "":
             mensagens_formatar_fmc()
 
-    alerta_operacao_iniciada()
-
     subprocess.run("cls", shell=True)
     print(
         f"{BColors.WARNING}Iniciando formatação. Não remova o Flash Memory Card durante o processo...\n" + BColors.ENDC)
+
+    alerta_operacao_iniciada()
 
     formatar(lista_de_dispositivos)
 
