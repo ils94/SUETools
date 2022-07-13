@@ -1,10 +1,8 @@
 import subprocess
-import threading
 import time
 import os
 import keyboard
 from playsound import playsound
-from threading import Thread
 
 numero_mrs = 0
 opcao = ""
