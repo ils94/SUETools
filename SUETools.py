@@ -249,6 +249,8 @@ def diretorio_copia():
 def formatar_mrs():
     usb_watcher(mensagens_formatar_mr)
 
+    alerta_operacao_iniciada()
+
     subprocess.run("cls", shell=True)
     print(f"{BColors.WARNING}Iniciando formatação. Não remova as MRs durante o processo...\n" + BColors.ENDC)
 
@@ -259,7 +261,7 @@ def formatar_mrs():
     print(f'{BColors.OKGREEN}\nSegure "K" para formatar novamente.' + BColors.ENDC)
     print(f'{BColors.OKGREEN}\nSegure "ESC" para voltar ao Menu Inicial.' + BColors.ENDC)
 
-    alerta()
+    alerta_operacao_concluida()
 
     while True:
         if listar_dispositivos() == "":
@@ -277,6 +279,8 @@ def copiar_para_mrs():
     global erro_critico
 
     usb_watcher(mensagens_copiar_mr)
+
+    alerta_operacao_iniciada()
 
     subprocess.run("cls", shell=True)
     print(
@@ -302,7 +306,7 @@ def copiar_para_mrs():
     print(f'{BColors.OKGREEN}\nSegure "K" para copiar novamente.' + BColors.ENDC)
     print(f'{BColors.OKGREEN}\nSegure "ESC" para voltar ao Menu Inicial.' + BColors.ENDC)
 
-    alerta()
+    alerta_operacao_concluida()
 
     while True:
         if listar_dispositivos() == "":
@@ -339,6 +343,8 @@ def formatar_fmc():
         elif str(result) == "":
             mensagens_formatar_fmc()
 
+    alerta_operacao_iniciada()
+
     subprocess.run("cls", shell=True)
     print(
         f"{BColors.WARNING}Iniciando formatação. Não remova o Flash Memory Card durante o processo...\n" + BColors.ENDC)
@@ -348,7 +354,7 @@ def formatar_fmc():
     print(f"{BColors.OKGREEN}\nOperação concluída." + BColors.ENDC)
     print(f"{BColors.OKGREEN}\nRemova o Flash Memory Card." + BColors.ENDC)
 
-    alerta()
+    alerta_operacao_concluida()
 
     while True:
         if listar_dispositivos() == "":
@@ -387,8 +393,12 @@ def usb_watcher(mensagens):
             mensagens()
 
 
-def alerta():
+def alerta_operacao_concluida():
     playsound("audios/oc.mp3")
+
+
+def alerta_operacao_iniciada():
+    playsound("audios/oi.mp3")
 
 
 selecionar_modo()
