@@ -2,6 +2,7 @@ import subprocess
 import time
 import os
 import keyboard
+import re
 from playsound import playsound
 
 numero_mrs = 0
@@ -12,6 +13,7 @@ tipo_de_formatacao = ""
 
 lista_de_dispositivos = []
 lista_arquivos = []
+unidades_excluidas = []
 erro_critico = None
 erro_lista = []
 
@@ -64,9 +66,12 @@ def mensagens_copiar_mr():
 
 
 def mensagens_formatar_fmc():
+    global unidades_excluidas
+
     time.sleep(1)
     subprocess.run("cls", shell=True)
     print("Modo selecionado: Formatar Flash Memory Card.")
+    print("\nLista de unidades excluídas: " + str(unidades_excluidas))
     print('\nSegure "ESC" para cancelar a operação, e voltar ao Menu Inicial.')
     print(f"{BColors.WARNING}\nAguardando a inserção do Flash Memory Card." + BColors.ENDC)
 
@@ -83,15 +88,15 @@ def formatar(lista_de_mrs):
 
     for mr in lista_de_mrs:
         try:
-            dir = os.listdir(mr + ":/")
+            if tipo_de_formatacao == "normal":
+                dir = os.listdir(mr + ":/")
 
-            if "System Volume Information" in dir:
-                dir.remove("System Volume Information")
-
-            if len(dir) == 0 and tipo_de_formatacao == "normal":
-                print(f"{BColors.WARNING}Unidade " + mr + " já foi formatada. Ignorando..." + BColors.ENDC)
+                if "System Volume Information" in dir:
+                    dir.remove("System Volume Information")
+                if len(dir) == 0:
+                    print(f"{BColors.WARNING}Unidade " + mr + " já foi formatada. Ignorando..." + BColors.ENDC)
             else:
-                result = subprocess.run("format /q /x /y " + mr + ":", shell=True, stdout=subprocess.DEVNULL,
+                result = subprocess.run("format /q /y /x " + mr + ":", shell=True, stdout=subprocess.DEVNULL,
                                         stderr=subprocess.STDOUT)
 
                 if str(result.returncode) == "0":
@@ -156,6 +161,7 @@ def copiar(lista):
 
 def listar_dispositivos():
     global drivetype
+    global unidades_excluidas
 
     result = str(
         subprocess.check_output("wmic logicaldisk where drivetype=" + drivetype + " get DeviceID", text=True,
@@ -163,7 +169,10 @@ def listar_dispositivos():
         "\r", "").replace("\n", "").replace("DeviceID  ", "").replace(":        ", "|")
 
     if drivetype == "3":
-        result = result.replace("C", "").replace("D", "").replace("|", "")
+        for u in unidades_excluidas:
+            result = result.replace(u, "")
+
+        result = result.replace("C", "").replace("|", "")
         return result
     if drivetype == "2":
         return result
@@ -194,7 +203,8 @@ def selecionar_modo():
         tipo_formatacao()
     if opcao == "3":
         drivetype = "3"
-        formatar_fmc()
+        subprocess.run("cls", shell=True)
+        excluir_unidades()
     else:
         selecionar_modo()
 
@@ -349,6 +359,42 @@ def copiar_para_mrs():
             break
 
     copiar_para_mrs()
+
+
+def excluir_unidades():
+    global unidades_excluidas
+
+    print('Digite "menu" para voltar ao Menu Inicial.\n')
+
+    unidades = input('A Flash Memory Card é considerada um disco fixo. Por isso, seja necessário excluir '
+                     'as letras que representam as unidades desses tipos de discos, como "C".'
+                     '\n\nPor padrão, a unidade "C" já está excluída.'
+                     '\n\nDigite a baixo as letras das unidades de discos fixos que você gostaria '
+                     'de excluir para prevenir que o programa formate essas unidades.'
+                     '\n\nSepare cada unidade com uma virgula ",".\n\nUnidades: ')
+
+    if unidades == "menu":
+        selecionar_modo()
+    else:
+        if not re.match('^[a-zA-Z,]*$', unidades):
+            subprocess.run("cls", shell=True)
+            print(f"{BColors.FAIL}Unidade(s) inválida(s)\n" + BColors.ENDC)
+            excluir_unidades()
+        if "c" in unidades or "C" in unidades:
+            subprocess.run("cls", shell=True)
+            print(f'{BColors.FAIL}Unidade "C" já está excluída por padrão.\n' + BColors.ENDC)
+            excluir_unidades()
+        else:
+            lista_unidades = unidades.upper().split(",")
+
+            for u in lista_unidades:
+                if u not in unidades_excluidas:
+                    unidades_excluidas.append(u)
+
+            if "" in unidades_excluidas:
+                unidades_excluidas.remove("")
+
+            formatar_fmc()
 
 
 def formatar_fmc():
