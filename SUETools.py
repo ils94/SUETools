@@ -8,6 +8,7 @@ numero_mrs = 0
 opcao = ""
 copiar_de = ""
 drivetype = ""
+tipo_de_formatacao = ""
 
 lista_de_dispositivos = []
 lista_arquivos = []
@@ -25,10 +26,12 @@ class BColors:
 
 def mensagens_formatar_mr():
     global lista_de_dispositivos
+    global tipo_de_formatacao
 
     time.sleep(1)
     subprocess.run("cls", shell=True)
     print("Modo selecionado: Formatar MRs.")
+    print("\nTipo de formatação: " + tipo_de_formatacao)
     print('\nSegure "ESC" para cancelar a operação, e voltar ao Menu Inicial.')
     print('\nSegure "F" para forçar a operação.')
     print("\nInsira as MRs, " + str(numero_mrs) + " no total.")
@@ -41,10 +44,12 @@ def mensagens_copiar_mr():
     global lista_de_dispositivos
     global copiar_de
     global lista_arquivos
+    global tipo_de_formatacao
 
     time.sleep(1)
     subprocess.run("cls", shell=True)
     print("Modo selecionado: Copiar arquivos para as MRs.")
+    print("\nTipo de formatação: " + tipo_de_formatacao)
     print('\nSegure "ESC" para cancelar a operação, e voltar ao Menu Inicial.')
     print('\nSegure "F" para forçar a operação.')
     print(f"{BColors.WARNING}\nDiretório de origem dos arquivos copiados: " + copiar_de + BColors.ENDC)
@@ -71,6 +76,7 @@ def formatar(lista_de_mrs):
     global opcao
     global erro_critico
     global erro_lista
+    global tipo_de_formatacao
 
     erro_critico = False
     erro_lista.clear()
@@ -82,7 +88,7 @@ def formatar(lista_de_mrs):
             if "System Volume Information" in dir:
                 dir.remove("System Volume Information")
 
-            if len(dir) == 0:
+            if len(dir) == 0 and tipo_de_formatacao == "normal":
                 print(f"{BColors.WARNING}Unidade " + mr + " já foi formatada. Ignorando..." + BColors.ENDC)
             else:
                 result = subprocess.run("format /q /x /y " + mr + ":", shell=True, stdout=subprocess.DEVNULL,
@@ -181,11 +187,11 @@ def selecionar_modo():
     if opcao == "1":
         print("Copiar arquivos para as MRs.\n")
         drivetype = "2"
-        numero_de_mrs()
+        tipo_formatacao()
     if opcao == "2":
         print("Formatar MRs.\n")
         drivetype = "2"
-        numero_de_mrs()
+        tipo_formatacao()
     if opcao == "3":
         drivetype = "3"
         formatar_fmc()
@@ -193,16 +199,42 @@ def selecionar_modo():
         selecionar_modo()
 
 
+def tipo_formatacao():
+    global tipo_de_formatacao
+
+    subprocess.run("cls", shell=True)
+
+    opcao = input('Digite "n" para formatação normal (a unidade só será formatada se houver arquivos)'
+                  '\nDigite "f" para formatação forçada (a unidade será formatada mesmo se não houver arquivos)'
+                  '\nDigite "menu" para voltar ao Menu Inicial.\n\nOpção: ')
+
+    subprocess.run("cls", shell=True)
+
+    if opcao == "n":
+        tipo_de_formatacao = "normal"
+        numero_de_mrs()
+    if opcao == "f":
+        tipo_de_formatacao = "forçada"
+        numero_de_mrs()
+    if opcao == "menu":
+        selecionar_modo()
+    else:
+        tipo_formatacao()
+
+
 def numero_de_mrs():
     global numero_mrs
     global opcao
 
     print('Digite "menu" para voltar ao Menu Inicial.\n')
+    print('Digite "voltar" para voltar a etapa de tipo de formatação.\n')
 
     numero_mrs = input("Entre a quantidade de MRs que serão utilizadas durante a operação: ")
 
     if numero_mrs == "menu":
         selecionar_modo()
+    if numero_mrs == "voltar":
+        tipo_formatacao()
     else:
         try:
             int(numero_mrs)
