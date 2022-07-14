@@ -32,6 +32,7 @@ def mensagens_formatar_mr():
 
     time.sleep(1)
     subprocess.run("cls", shell=True)
+
     print("Modo selecionado: Formatar MRs.")
     print("\nTipo de formatação: " + tipo_de_formatacao)
     print('\nSegure "ESC" para cancelar a operação, e voltar ao Menu Inicial.')
@@ -50,6 +51,7 @@ def mensagens_copiar_mr():
 
     time.sleep(1)
     subprocess.run("cls", shell=True)
+
     print("Modo selecionado: Copiar arquivos para as MRs.")
     print("\nTipo de formatação: " + tipo_de_formatacao)
     print('\nSegure "ESC" para cancelar a operação, e voltar ao Menu Inicial.')
@@ -70,6 +72,7 @@ def mensagens_formatar_fmc():
 
     time.sleep(1)
     subprocess.run("cls", shell=True)
+
     print("Modo selecionado: Formatar Flash Memory Card.")
     print("\nLista de unidades excluídas: " + str(unidades_excluidas))
     print('\nSegure "ESC" para cancelar a operação, e voltar ao Menu Inicial.')
@@ -95,14 +98,10 @@ def formatar(lista_de_mrs):
                     dir.remove("System Volume Information")
                 if len(dir) == 0:
                     print(f"{BColors.WARNING}Unidade " + mr + " já foi formatada. Ignorando..." + BColors.ENDC)
-            else:
-                result = subprocess.run("format /q /y /x " + mr + ":", shell=True, stdout=subprocess.DEVNULL,
-                                        stderr=subprocess.STDOUT)
-
-                if str(result.returncode) == "0":
-                    print(f"{BColors.OKBLUE}Unidade " + mr + " formatada com sucesso." + BColors.ENDC)
                 else:
-                    print(f"{BColors.FAIL}Ocorreu um erro ao tentar formatar a unidade: " + mr + "." + BColors.ENDC)
+                    subprocess_formatar(mr)
+            else:
+                subprocess_formatar(mr)
         except Exception as e:
             print(str(f"{BColors.FAIL} " + str(e) + BColors.ENDC))
             erro_critico = True
@@ -171,7 +170,6 @@ def listar_dispositivos():
     if drivetype == "3":
         for u in unidades_excluidas:
             result = result.replace(u, "")
-
         result = result.replace("C", "").replace("|", "")
         return result
     if drivetype == "2":
@@ -214,9 +212,11 @@ def tipo_formatacao():
 
     subprocess.run("cls", shell=True)
 
-    opcao = input('Digite "n" para formatação normal (a unidade só será formatada se houver arquivos)'
-                  '\nDigite "f" para formatação forçada (a unidade será formatada mesmo se não houver arquivos)'
-                  '\nDigite "menu" para voltar ao Menu Inicial.\n\nOpção: ')
+    print('Digite "menu" para voltar ao Menu Inicial.\n'
+          '\nDigite "n" para formatação normal (a unidade só será formatada se houver arquivos)'
+          '\nDigite "f" para formatação forçada (a unidade será formatada mesmo se não houver arquivos)')
+
+    opcao = input('\nopcão: ')
 
     subprocess.run("cls", shell=True)
 
@@ -252,7 +252,6 @@ def numero_de_mrs():
             subprocess.run("cls", shell=True)
             print(f"{BColors.FAIL}Apenas números inteiros são permitidos.\n" + BColors.ENDC)
             numero_de_mrs()
-
         if opcao == "1":
             subprocess.run("cls", shell=True)
             diretorio_copia()
@@ -264,8 +263,8 @@ def numero_de_mrs():
 def diretorio_copia():
     global copiar_de
 
-    print('Digite "voltar" para voltar a etapa de quantidade de MRs para a operação.\n')
     print('Digite "menu" para voltar ao Menu Inicial.\n')
+    print('Digite "voltar" para voltar a etapa de quantidade de MRs para a operação.\n')
 
     copiar_de = input("Insira o diretório com os arquivos que serão copiados: ")
 
@@ -280,7 +279,6 @@ def diretorio_copia():
             for file in os.listdir(copiar_de):
                 if os.path.isfile(os.path.join(copiar_de, file)):
                     lista_arquivos.append(file)
-
             copiar_para_mrs()
         else:
             subprocess.run("cls", shell=True)
@@ -399,6 +397,9 @@ def excluir_unidades():
 
 def formatar_fmc():
     global lista_de_dispositivos
+    global tipo_de_formatacao
+
+    tipo_de_formatacao = "forçada"
 
     lista_de_dispositivos.clear()
 
@@ -439,6 +440,16 @@ def formatar_fmc():
             break
 
     formatar_fmc()
+
+
+def subprocess_formatar(mr):
+    result = subprocess.run("format /q /y /x " + mr + ":", shell=True, stdout=subprocess.DEVNULL,
+                            stderr=subprocess.STDOUT)
+
+    if str(result.returncode) == "0":
+        print(f"{BColors.OKBLUE}Unidade " + mr + " formatada com sucesso." + BColors.ENDC)
+    else:
+        print(f"{BColors.FAIL}Ocorreu um erro ao tentar formatar a unidade: " + mr + "." + BColors.ENDC)
 
 
 def usb_watcher(mensagens):
