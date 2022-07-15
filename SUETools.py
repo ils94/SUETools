@@ -5,7 +5,7 @@ import keyboard
 import re
 from playsound import playsound
 
-numero_mrs = 0
+numero_midias = 0
 opcao = ""
 copiar_de = ""
 drivetype = ""
@@ -33,14 +33,14 @@ def mensagens_formatar_mr():
     time.sleep(1)
     subprocess.run("cls", shell=True)
 
-    print("Modo selecionado: Formatar MRs.")
+    print("Modo selecionado: Formatar Mídias.")
     print("\nTipo de formatação: " + tipo_de_formatacao)
     print('\nSegure "ESC" para cancelar a operação, e voltar ao Menu Inicial.')
     print('\nSegure "F" para forçar a operação.')
-    print("\nInsira as MRs, " + str(numero_mrs) + " no total.")
-    print("\nNúmero de MRs inseridas: " + str(len(lista_de_dispositivos)) + ".")
+    print("\nInsira as Mídias, " + str(numero_midias) + " no total.")
+    print("\nNúmero de Mídias inseridas: " + str(len(lista_de_dispositivos)) + ".")
     print("\n" + str(lista_de_dispositivos))
-    print(f"{BColors.WARNING}\nAguardando a inserção de todas as MRs nas portas USBs." + BColors.ENDC)
+    print(f"{BColors.WARNING}\nAguardando a inserção de todas as Mídias nas portas USBs." + BColors.ENDC)
 
 
 def mensagens_copiar_mr():
@@ -52,19 +52,19 @@ def mensagens_copiar_mr():
     time.sleep(1)
     subprocess.run("cls", shell=True)
 
-    print("Modo selecionado: Copiar arquivos para as MRs.")
+    print("Modo selecionado: Copiar arquivos para as Mídias.")
     print("\nTipo de formatação: " + tipo_de_formatacao)
     print('\nSegure "ESC" para cancelar a operação, e voltar ao Menu Inicial.')
     print('\nSegure "F" para forçar a operação.')
     print(f"{BColors.WARNING}\nDiretório de origem dos arquivos copiados: " + copiar_de + BColors.ENDC)
     print(f"{BColors.WARNING}\nUm total de " + str(
-        len(lista_arquivos)) + " arquivos serão copiados para as MRs." + BColors.ENDC)
+        len(lista_arquivos)) + " arquivos serão copiados para as Mídias." + BColors.ENDC)
     print("\nLista de arquivos que serão copiados:")
     print("\n" + str(lista_arquivos))
-    print("\nInsira as MRs, " + str(numero_mrs) + " no total.")
-    print("\nNúmero de MRs inseridas: " + str(len(lista_de_dispositivos)) + ".")
+    print("\nInsira as Mídias, " + str(numero_midias) + " no total.")
+    print("\nNúmero de Mídias inseridas: " + str(len(lista_de_dispositivos)) + ".")
     print("\n" + str(lista_de_dispositivos))
-    print(f"{BColors.WARNING}\nAguardando a inserção de todas as MRs nas portas USBs." + BColors.ENDC)
+    print(f"{BColors.WARNING}\nAguardando a inserção de todas as Mídias nas portas USBs." + BColors.ENDC)
 
 
 def mensagens_formatar_fmc():
@@ -185,18 +185,18 @@ def selecionar_modo():
 
     subprocess.run("cls", shell=True)
 
-    opcao = input('Digite "1" para copiar arquivos para as MRs.'
-                  '\nDigite "2" para formatar as MRs.'
+    opcao = input('Digite "1" para copiar arquivos para as Mídias.'
+                  '\nDigite "2" para formatar as Mídias.'
                   '\nDigite "3" para formatar um Flash Memory Card.\n\nOpção: ')
 
     subprocess.run("cls", shell=True)
 
     if opcao == "1":
-        print("Copiar arquivos para as MRs.\n")
+        print("Copiar arquivos para as Mídias.\n")
         drivetype = "2"
         tipo_formatacao()
     if opcao == "2":
-        print("Formatar MRs.\n")
+        print("Formatar Mídias.\n")
         drivetype = "2"
         tipo_formatacao()
     if opcao == "3":
@@ -233,21 +233,21 @@ def tipo_formatacao():
 
 
 def numero_de_mrs():
-    global numero_mrs
+    global numero_midias
     global opcao
 
     print('Digite "menu" para voltar ao Menu Inicial.\n')
     print('Digite "voltar" para voltar a etapa de tipo de formatação.\n')
 
-    numero_mrs = input("Entre a quantidade de MRs que serão utilizadas durante a operação: ")
+    numero_midias = input("Entre a quantidade de Mídias que serão utilizadas durante a operação: ")
 
-    if numero_mrs == "menu":
+    if numero_midias == "menu":
         selecionar_modo()
-    if numero_mrs == "voltar":
+    if numero_midias == "voltar":
         tipo_formatacao()
     else:
         try:
-            int(numero_mrs)
+            int(numero_midias)
         except ValueError:
             subprocess.run("cls", shell=True)
             print(f"{BColors.FAIL}Apenas números inteiros são permitidos.\n" + BColors.ENDC)
@@ -264,7 +264,7 @@ def diretorio_copia():
     global copiar_de
 
     print('Digite "menu" para voltar ao Menu Inicial.\n')
-    print('Digite "voltar" para voltar a etapa de quantidade de MRs para a operação.\n')
+    print('Digite "voltar" para voltar a etapa de quantidade de Mídias para a operação.\n')
 
     copiar_de = input("Insira o diretório com os arquivos que serão copiados: ")
 
@@ -290,14 +290,14 @@ def formatar_mrs():
     usb_watcher(mensagens_formatar_mr)
 
     subprocess.run("cls", shell=True)
-    print(f"{BColors.WARNING}Iniciando formatação. Não remova as MRs durante o processo...\n" + BColors.ENDC)
+    print(f"{BColors.WARNING}Iniciando formatação. Não remova as Mídias durante o processo...\n" + BColors.ENDC)
 
     alerta_operacao_iniciada()
 
     formatar(lista_de_dispositivos)
 
     print(f"{BColors.OKGREEN}\nOperação concluída." + BColors.ENDC)
-    print(f"{BColors.OKGREEN}\nRemova todas as MRs das portas USBs." + BColors.ENDC)
+    print(f"{BColors.OKGREEN}\nRemova todas as Mídias das portas USBs." + BColors.ENDC)
     print(f'{BColors.OKGREEN}\nSegure "K" para formatar novamente.' + BColors.ENDC)
     print(f'{BColors.OKGREEN}\nSegure "ESC" para voltar ao Menu Inicial.' + BColors.ENDC)
 
@@ -322,7 +322,7 @@ def copiar_para_mrs():
 
     subprocess.run("cls", shell=True)
     print(
-        f"{BColors.WARNING}Formatando as MRs por precaução. Não remova as MRs durante o processo...\n" + BColors.ENDC)
+        f"{BColors.WARNING}Formatando as Mídias por precaução. Não remova as Mídias durante o processo...\n" + BColors.ENDC)
 
     alerta_operacao_iniciada()
 
@@ -330,19 +330,19 @@ def copiar_para_mrs():
 
     if len(lista_de_dispositivos) > 0:
 
-        print(f"{BColors.WARNING}\nIniciando copia. Não remova as MRs durante o processo...\n" + BColors.ENDC)
+        print(f"{BColors.WARNING}\nIniciando copia. Não remova as Mídias durante o processo...\n" + BColors.ENDC)
 
         copiar(lista_de_dispositivos)
 
         if erro_critico:
-            print(f"{BColors.FAIL}Não foi possível copiar os arquivos para algumas MRs:" + BColors.ENDC)
+            print(f"{BColors.FAIL}Não foi possível copiar os arquivos para algumas Mídias:" + BColors.ENDC)
             print(f"{BColors.FAIL}\n" + str(erro_lista) + "\n" + BColors.ENDC)
 
     else:
-        print(f"{BColors.FAIL}\nNão foi possível copiar os arquivos para as MRs.\n" + BColors.ENDC)
+        print(f"{BColors.FAIL}\nNão foi possível copiar os arquivos para as Mídias.\n" + BColors.ENDC)
 
     print(f"{BColors.OKGREEN}Operação concluída." + BColors.ENDC)
-    print(f"{BColors.OKGREEN}\nRemova todas as MRs das portas USBs." + BColors.ENDC)
+    print(f"{BColors.OKGREEN}\nRemova todas as Mídias das portas USBs." + BColors.ENDC)
     print(f'{BColors.OKGREEN}\nSegure "K" para copiar novamente.' + BColors.ENDC)
     print(f'{BColors.OKGREEN}\nSegure "ESC" para voltar ao Menu Inicial.' + BColors.ENDC)
 
@@ -366,10 +366,12 @@ def excluir_unidades():
 
     unidades = input('A Flash Memory Card é considerada um disco fixo. Por isso, seja necessário excluir '
                      'as letras que representam as unidades desses tipos de discos, como "C".'
-                     '\n\nPor padrão, a unidade "C" já está excluída.'
+                     '\n\nPor padrão, a unidade "C" já está excluída nessa operação.'
                      '\n\nDigite a baixo as letras das unidades de discos fixos que você gostaria '
                      'de excluir para prevenir que o programa formate essas unidades.'
-                     '\n\nSepare cada unidade com uma virgula ",".\n\nUnidades: ')
+                     '\n\nDeixe o campo em branco se não quiser excluir nenhuma unidade.'
+                     '\n\nSepare cada unidade com vírgulas "," para excluir mais de uma.'
+                     '\n\nUnidades: ')
 
     if unidades == "menu":
         selecionar_modo()
@@ -454,7 +456,7 @@ def subprocess_formatar(mr):
 
 def usb_watcher(mensagens):
     global lista_de_dispositivos
-    global numero_mrs
+    global numero_midias
 
     lista_de_dispositivos.clear()
 
@@ -474,7 +476,7 @@ def usb_watcher(mensagens):
             if keyboard.is_pressed("F"):
                 break
 
-            if len(lista_de_dispositivos) < int(numero_mrs):
+            if len(lista_de_dispositivos) < int(numero_midias):
                 lista_de_dispositivos.clear()
             else:
                 break
