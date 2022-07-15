@@ -14,8 +14,10 @@ tipo_de_formatacao = ""
 lista_de_dispositivos = []
 lista_arquivos = []
 unidades_excluidas = []
-erro_critico = None
 erro_lista = []
+
+erro_critico = None
+
 
 
 class BColors:
@@ -26,7 +28,7 @@ class BColors:
     ENDC = '\033[0m'
 
 
-def mensagens_formatar_mr():
+def mensagens_formatar_midias():
     global lista_de_dispositivos
     global tipo_de_formatacao
 
@@ -43,7 +45,7 @@ def mensagens_formatar_mr():
     print(f"{BColors.WARNING}\nAguardando a inserção de todas as Mídias nas portas USBs." + BColors.ENDC)
 
 
-def mensagens_copiar_mr():
+def mensagens_copiar_midias():
     global lista_de_dispositivos
     global copiar_de
     global lista_arquivos
@@ -79,7 +81,7 @@ def mensagens_formatar_fmc():
     print(f"{BColors.WARNING}\nAguardando a inserção do Flash Memory Card." + BColors.ENDC)
 
 
-def formatar(lista_de_mrs):
+def formatar(lista_de_midias):
     global lista_de_dispositivos
     global opcao
     global erro_critico
@@ -89,23 +91,23 @@ def formatar(lista_de_mrs):
     erro_critico = False
     erro_lista.clear()
 
-    for mr in lista_de_mrs:
+    for midia in lista_de_midias:
         try:
             if tipo_de_formatacao == "normal":
-                dir = os.listdir(mr + ":/")
+                dir = os.listdir(midia + ":/")
 
                 if "System Volume Information" in dir:
                     dir.remove("System Volume Information")
                 if len(dir) == 0:
-                    print(f"{BColors.WARNING}Unidade " + mr + " já foi formatada. Ignorando..." + BColors.ENDC)
+                    print(f"{BColors.WARNING}Unidade " + midia + " já foi formatada. Ignorando..." + BColors.ENDC)
                 else:
-                    subprocess_formatar(mr)
+                    subprocess_formatar(midia)
             else:
-                subprocess_formatar(mr)
+                subprocess_formatar(midia)
         except Exception as e:
             print(str(f"{BColors.FAIL} " + str(e) + BColors.ENDC))
             erro_critico = True
-            erro_lista.append(mr)
+            erro_lista.append(midia)
             continue
 
     if erro_critico and opcao == "1":
@@ -116,43 +118,43 @@ def formatar(lista_de_mrs):
 def copiar(lista):
     global copiar_de
 
-    for mrs in lista:
-        result = subprocess.run("robocopy " + str(copiar_de) + " " + mrs + ":", shell=True,
+    for midia in lista:
+        result = subprocess.run("robocopy " + str(copiar_de) + " " + midia + ":", shell=True,
                                 stdout=subprocess.DEVNULL,
                                 stderr=subprocess.STDOUT)
         if str(result.returncode) == "0":
             print(f"{BColors.WARNING}Nenhum erro ocorreu e nenhuma cópia foi feita. "
-                  "As árvores de diretório de origem e destino são completamente sincronizadas em: " + mrs + "." + BColors.ENDC)
+                  "As árvores de diretório de origem e destino são completamente sincronizadas em: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "1":
-            print(f"{BColors.OKBLUE}Os arquivos foram copiados com sucesso para: " + mrs + "." + BColors.ENDC)
+            print(f"{BColors.OKBLUE}Os arquivos foram copiados com sucesso para: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "2":
-            print(f"{BColors.OKBLUE}Os arquivos foram copiados com sucesso para: " + mrs + "." + BColors.ENDC)
+            print(f"{BColors.OKBLUE}Os arquivos foram copiados com sucesso para: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "3":
-            print(f"{BColors.OKBLUE}Os arquivos foram copiados com sucesso para: " + mrs + "." + BColors.ENDC)
+            print(f"{BColors.OKBLUE}Os arquivos foram copiados com sucesso para: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "4":
             print(
-                f"{BColors.WARNING}Alguns arquivos ou diretórios incompatíveis foram detectados em: " + mrs + "." + BColors.ENDC)
+                f"{BColors.WARNING}Alguns arquivos ou diretórios incompatíveis foram detectados em: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "5":
             print(
-                f"{BColors.WARNING}Alguns arquivos foram copiados. Alguns arquivos foram incompatíveis. Nenhuma falha foi encontrada em: " + mrs + "." + BColors.ENDC)
+                f"{BColors.WARNING}Alguns arquivos foram copiados. Alguns arquivos foram incompatíveis. Nenhuma falha foi encontrada em: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "6":
             print(
-                f"{BColors.WARNING}Existem arquivos adicionais e arquivos incompatíveis. Nenhum arquivo foi copiado e nenhuma falha foi encontrada. Isso significa que os arquivos já existem no diretório de destino em: " + mrs + "." + BColors.ENDC)
+                f"{BColors.WARNING}Existem arquivos adicionais e arquivos incompatíveis. Nenhum arquivo foi copiado e nenhuma falha foi encontrada. Isso significa que os arquivos já existem no diretório de destino em: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "7":
             print(
-                f"{BColors.WARNING}Os arquivos foram copiados, uma incompatibilidade de arquivo estava presente e arquivos adicionais estavam presentes em: " + mrs + "." + BColors.ENDC)
+                f"{BColors.WARNING}Os arquivos foram copiados, uma incompatibilidade de arquivo estava presente e arquivos adicionais estavam presentes em: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "8":
             print(
-                f"{BColors.FAIL}Alguns arquivos ou diretórios não puderam ser copiados (ocorreram erros de cópia e o limite de repetição foi excedido) em: " + mrs + "." + BColors.ENDC)
+                f"{BColors.FAIL}Alguns arquivos ou diretórios não puderam ser copiados (ocorreram erros de cópia e o limite de repetição foi excedido) em: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "16":
             print(
-                f"{BColors.FAIL}Erro grave. Robocopy não copiou nenhum arquivo. Um erro de uso ou um erro devido a privilégios de acesso insuficientes nos diretórios de origem ou destino em: " + mrs + "." + BColors.ENDC)
+                f"{BColors.FAIL}Erro grave. Robocopy não copiou nenhum arquivo. Um erro de uso ou um erro devido a privilégios de acesso insuficientes nos diretórios de origem ou destino em: " + midia + "." + BColors.ENDC)
 
         dir = []
 
-        if os.path.isdir(mrs + ":/"):
-            for file in os.listdir(mrs + ":/"):
-                if os.path.isfile(os.path.join(mrs + ":/", file)):
+        if os.path.isdir(midia + ":/"):
+            for file in os.listdir(midia + ":/"):
+                if os.path.isfile(os.path.join(midia + ":/", file)):
                     dir.append(file)
 
         print(f"{BColors.WARNING}Um total de " + str(len(dir)) + " arquivos foram copiados.\n" + BColors.ENDC)
@@ -222,17 +224,17 @@ def tipo_formatacao():
 
     if opcao == "n":
         tipo_de_formatacao = "normal"
-        numero_de_mrs()
+        numero_de_midias()
     if opcao == "f":
         tipo_de_formatacao = "forçada"
-        numero_de_mrs()
+        numero_de_midias()
     if opcao == "menu":
         selecionar_modo()
     else:
         tipo_formatacao()
 
 
-def numero_de_mrs():
+def numero_de_midias():
     global numero_midias
     global opcao
 
@@ -251,13 +253,13 @@ def numero_de_mrs():
         except ValueError:
             subprocess.run("cls", shell=True)
             print(f"{BColors.FAIL}Apenas números inteiros são permitidos.\n" + BColors.ENDC)
-            numero_de_mrs()
+            numero_de_midias()
         if opcao == "1":
             subprocess.run("cls", shell=True)
             diretorio_copia()
         if opcao == "2":
             subprocess.run("cls", shell=True)
-            formatar_mrs()
+            formatar_midias()
 
 
 def diretorio_copia():
@@ -270,7 +272,7 @@ def diretorio_copia():
 
     if copiar_de == "voltar":
         subprocess.run("cls", shell=True)
-        numero_de_mrs()
+        numero_de_midias()
     elif copiar_de == "menu":
         subprocess.run("cls", shell=True)
         selecionar_modo()
@@ -279,15 +281,15 @@ def diretorio_copia():
             for file in os.listdir(copiar_de):
                 if os.path.isfile(os.path.join(copiar_de, file)):
                     lista_arquivos.append(file)
-            copiar_para_mrs()
+            copiar_para_midias()
         else:
             subprocess.run("cls", shell=True)
             print(f'{BColors.FAIL}Diretório "' + copiar_de + '" não existe.\n' + BColors.ENDC)
             diretorio_copia()
 
 
-def formatar_mrs():
-    usb_watcher(mensagens_formatar_mr)
+def formatar_midias():
+    usb_watcher(mensagens_formatar_midias)
 
     subprocess.run("cls", shell=True)
     print(f"{BColors.WARNING}Iniciando formatação. Não remova as Mídias durante o processo...\n" + BColors.ENDC)
@@ -311,14 +313,14 @@ def formatar_mrs():
         elif keyboard.is_pressed("ESC"):
             break
 
-    formatar_mrs()
+    formatar_midias()
 
 
-def copiar_para_mrs():
+def copiar_para_midias():
     global erro_lista
     global erro_critico
 
-    usb_watcher(mensagens_copiar_mr)
+    usb_watcher(mensagens_copiar_midias)
 
     subprocess.run("cls", shell=True)
     print(
@@ -356,7 +358,7 @@ def copiar_para_mrs():
         elif keyboard.is_pressed("ESC"):
             break
 
-    copiar_para_mrs()
+    copiar_para_midias()
 
 
 def excluir_unidades():
@@ -444,14 +446,14 @@ def formatar_fmc():
     formatar_fmc()
 
 
-def subprocess_formatar(mr):
-    result = subprocess.run("format /q /y /x " + mr + ":", shell=True, stdout=subprocess.DEVNULL,
+def subprocess_formatar(midia):
+    result = subprocess.run("format /q /y /x " + midia + ":", shell=True, stdout=subprocess.DEVNULL,
                             stderr=subprocess.STDOUT)
 
     if str(result.returncode) == "0":
-        print(f"{BColors.OKBLUE}Unidade " + mr + " formatada com sucesso." + BColors.ENDC)
+        print(f"{BColors.OKBLUE}Unidade " + midia + " formatada com sucesso." + BColors.ENDC)
     else:
-        print(f"{BColors.FAIL}Ocorreu um erro ao tentar formatar a unidade: " + mr + "." + BColors.ENDC)
+        print(f"{BColors.FAIL}Ocorreu um erro ao tentar formatar a unidade: " + midia + "." + BColors.ENDC)
 
 
 def usb_watcher(mensagens):
