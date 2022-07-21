@@ -19,7 +19,6 @@ erro_lista = []
 erro_critico = None
 
 
-
 class BColors:
     OKBLUE = '\033[94m'
     OKGREEN = '\033[92m'
@@ -117,38 +116,21 @@ def formatar(lista_de_midias):
 
 def copiar(lista):
     global copiar_de
+    global erro_critico
 
     for midia in lista:
         result = subprocess.run("robocopy " + str(copiar_de) + " " + midia + ":", shell=True,
                                 stdout=subprocess.DEVNULL,
                                 stderr=subprocess.STDOUT)
-        if str(result.returncode) == "0":
-            print(f"{BColors.WARNING}Nenhum erro ocorreu e nenhuma cópia foi feita. "
-                  "As árvores de diretório de origem e destino são completamente sincronizadas em: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "1":
             print(f"{BColors.OKBLUE}Os arquivos foram copiados com sucesso para: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "2":
             print(f"{BColors.OKBLUE}Os arquivos foram copiados com sucesso para: " + midia + "." + BColors.ENDC)
         if str(result.returncode) == "3":
             print(f"{BColors.OKBLUE}Os arquivos foram copiados com sucesso para: " + midia + "." + BColors.ENDC)
-        if str(result.returncode) == "4":
-            print(
-                f"{BColors.WARNING}Alguns arquivos ou diretórios incompatíveis foram detectados em: " + midia + "." + BColors.ENDC)
-        if str(result.returncode) == "5":
-            print(
-                f"{BColors.WARNING}Alguns arquivos foram copiados. Alguns arquivos foram incompatíveis. Nenhuma falha foi encontrada em: " + midia + "." + BColors.ENDC)
-        if str(result.returncode) == "6":
-            print(
-                f"{BColors.WARNING}Existem arquivos adicionais e arquivos incompatíveis. Nenhum arquivo foi copiado e nenhuma falha foi encontrada. Isso significa que os arquivos já existem no diretório de destino em: " + midia + "." + BColors.ENDC)
-        if str(result.returncode) == "7":
-            print(
-                f"{BColors.WARNING}Os arquivos foram copiados, uma incompatibilidade de arquivo estava presente e arquivos adicionais estavam presentes em: " + midia + "." + BColors.ENDC)
-        if str(result.returncode) == "8":
-            print(
-                f"{BColors.FAIL}Alguns arquivos ou diretórios não puderam ser copiados (ocorreram erros de cópia e o limite de repetição foi excedido) em: " + midia + "." + BColors.ENDC)
-        if str(result.returncode) == "16":
-            print(
-                f"{BColors.FAIL}Erro grave. Robocopy não copiou nenhum arquivo. Um erro de uso ou um erro devido a privilégios de acesso insuficientes nos diretórios de origem ou destino em: " + midia + "." + BColors.ENDC)
+        else:
+            print(f"{BColors.FAIL}Ocorreu um erro ao copiar arquivos para: " + midia + "." + BColors.ENDC)
+            erro_critico = True
 
         dir = []
 
@@ -289,6 +271,8 @@ def diretorio_copia():
 
 
 def formatar_midias():
+    global erro_critico
+
     usb_watcher(mensagens_formatar_midias)
 
     subprocess.run("cls", shell=True)
@@ -304,6 +288,9 @@ def formatar_midias():
     print(f'{BColors.OKGREEN}\nSegure "ESC" para voltar ao Menu Inicial.' + BColors.ENDC)
 
     alerta_operacao_concluida()
+
+    if erro_critico:
+        erros_encontrados()
 
     while True:
         if listar_dispositivos() == "":
@@ -349,6 +336,9 @@ def copiar_para_midias():
     print(f'{BColors.OKGREEN}\nSegure "ESC" para voltar ao Menu Inicial.' + BColors.ENDC)
 
     alerta_operacao_concluida()
+
+    if erro_critico:
+        erros_encontrados()
 
     while True:
         if listar_dispositivos() == "":
@@ -402,6 +392,7 @@ def excluir_unidades():
 def formatar_fmc():
     global lista_de_dispositivos
     global tipo_de_formatacao
+    global erro_critico
 
     tipo_de_formatacao = "forçada"
 
@@ -439,6 +430,9 @@ def formatar_fmc():
 
     alerta_operacao_concluida()
 
+    if erro_critico:
+        erros_encontrados()
+
     while True:
         if listar_dispositivos() == "":
             break
@@ -447,6 +441,8 @@ def formatar_fmc():
 
 
 def subprocess_formatar(midia):
+    global erro_critico
+
     result = subprocess.run("format /q /y /x " + midia + ":", shell=True, stdout=subprocess.DEVNULL,
                             stderr=subprocess.STDOUT)
 
@@ -454,6 +450,7 @@ def subprocess_formatar(midia):
         print(f"{BColors.OKBLUE}Unidade " + midia + " formatada com sucesso." + BColors.ENDC)
     else:
         print(f"{BColors.FAIL}Ocorreu um erro ao tentar formatar a unidade: " + midia + "." + BColors.ENDC)
+        erro_critico = True
 
 
 def usb_watcher(mensagens):
@@ -492,6 +489,10 @@ def alerta_operacao_concluida():
 
 def alerta_operacao_iniciada():
     playsound("audios/oi.mp3")
+
+
+def erros_encontrados():
+    playsound("audios/erro.mp3")
 
 
 selecionar_modo()
