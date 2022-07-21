@@ -287,10 +287,10 @@ def formatar_midias():
     print(f'{BColors.OKGREEN}\nSegure "K" para formatar novamente.' + BColors.ENDC)
     print(f'{BColors.OKGREEN}\nSegure "ESC" para voltar ao Menu Inicial.' + BColors.ENDC)
 
-    alerta_operacao_concluida()
-
     if erro_critico:
         erros_encontrados()
+    else:
+        alerta_operacao_concluida()
 
     while True:
         if listar_dispositivos() == "":
@@ -335,10 +335,10 @@ def copiar_para_midias():
     print(f'{BColors.OKGREEN}\nSegure "K" para copiar novamente.' + BColors.ENDC)
     print(f'{BColors.OKGREEN}\nSegure "ESC" para voltar ao Menu Inicial.' + BColors.ENDC)
 
-    alerta_operacao_concluida()
-
     if erro_critico:
         erros_encontrados()
+    else:
+        alerta_operacao_concluida()
 
     while True:
         if listar_dispositivos() == "":
@@ -428,10 +428,10 @@ def formatar_fmc():
     print(f"{BColors.OKGREEN}\nOperação concluída." + BColors.ENDC)
     print(f"{BColors.OKGREEN}\nRemova o Flash Memory Card." + BColors.ENDC)
 
-    alerta_operacao_concluida()
-
     if erro_critico:
         erros_encontrados()
+    else:
+        alerta_operacao_concluida()
 
     while True:
         if listar_dispositivos() == "":
@@ -484,15 +484,15 @@ def usb_watcher(mensagens):
 
 
 def alerta_operacao_concluida():
-    playsound("audios/oc.mp3")
+    playsound("audios/sucesso.mp3")
 
 
 def alerta_operacao_iniciada():
-    playsound("audios/oi.mp3")
+    playsound("audios/iniciando.mp3")
 
 
 def erros_encontrados():
-    playsound("audios/erro.mp3")
+    playsound("audios/erros.mp3")
 
 
 selecionar_modo()
