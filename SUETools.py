@@ -6,6 +6,7 @@ import re
 from playsound import playsound
 
 numero_midias = 0
+sleep = 0.1
 opcao = ""
 copiar_de = ""
 drivetype = ""
@@ -31,7 +32,7 @@ def mensagens_formatar_midias():
     global lista_de_dispositivos
     global tipo_de_formatacao
 
-    time.sleep(1)
+    time.sleep(sleep)
     subprocess.run("cls", shell=True)
 
     print("Modo selecionado: Formatar Mídias.")
@@ -50,7 +51,7 @@ def mensagens_copiar_midias():
     global lista_arquivos
     global tipo_de_formatacao
 
-    time.sleep(1)
+    time.sleep(sleep)
     subprocess.run("cls", shell=True)
 
     print("Modo selecionado: Copiar arquivos para as Mídias.")
@@ -71,7 +72,7 @@ def mensagens_copiar_midias():
 def mensagens_formatar_fmc():
     global unidades_excluidas
 
-    time.sleep(1)
+    time.sleep(sleep)
     subprocess.run("cls", shell=True)
 
     print("Modo selecionado: Formatar Flash Memory Card.")
